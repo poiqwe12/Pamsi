@@ -27,7 +27,7 @@ class Data
         std::cout << " Przekroczono zakres tablicy!! \n ";
         exit(1);
     }
-    bool Check_Sort()
+    bool Check_Sort() const
     {
         for (unsigned int i = 0; i < Wymiar - 1; ++i)
         {
@@ -131,43 +131,37 @@ void Merge(Data<Type, Wymiar> &D, Type *copy, int start, int mid, int end)
     {
         copy[i] = D[i];
     }
-    int var_L=start;
-    int var_R=mid+1;
-    int var_D=start;
-    
-    while((var_L<=mid)&&(var_R<=end))
+    int var_L = start;
+    int var_R = mid + 1;
+    int var_D = start;
+
+    while ((var_L <= mid) && (var_R <= end))
     {
-        if(copy[var_L]<copy[var_R])
+        if (copy[var_L] < copy[var_R])
         {
-            D[var_D]=copy[var_L];
+            D[var_D] = copy[var_L];
             var_L++;
         }
         else
         {
-            D[var_D]=copy[var_R];
+            D[var_D] = copy[var_R];
             var_R++;
         }
         var_D++;
     }
-    
-    while(var_L<=mid)
+
+    while (var_L <= mid)
     {
-        D[var_D]=copy[var_L];
+        D[var_D] = copy[var_L];
         var_D++;
         var_L++;
     }
-    while(var_R<=end)
+    while (var_R <= end)
     {
-        D[var_D]=copy[var_R];
+        D[var_D] = copy[var_R];
         var_D++;
         var_R++;
     }
-
-
-
-
-
-
 }
 template <typename Type, int Wymiar>
 void Merge_Sort2(Data<Type, Wymiar> &D, Type *copy, int start_array, int end_array)
@@ -185,6 +179,57 @@ Data<Type, Wymiar> Merge_Sort(Data<Type, Wymiar> D)
 {
     Type *copy = new Type[Wymiar]; //Tablica wymagana do sortowania
     Merge_Sort2(D, copy, 0, Wymiar - 1);
-    delete(copy);
+    delete (copy);
+    return D;
+}
+/*   Heap sort          */
+template <typename Type, int Wymiar>
+void Shift_Down(Data<Type, Wymiar> &D, int index_parent, int size)
+{
+    int index_L = 2 * index_parent + 1;
+    int index_R = 2 * index_parent + 2;
+    int index_Swap = index_parent;
+
+    if (index_R < size)
+    {
+        if (D[index_R] > D[index_L])
+        {
+            index_Swap = index_R;
+        }
+        else
+        {
+            index_Swap = index_L;
+        }
+    }
+    else
+    {
+        if (index_L < size)
+            index_Swap = index_L;
+    }
+    
+        if (D[index_Swap] > D[index_parent])
+        {
+            Swap(D[index_Swap], D[index_parent]);
+            Shift_Down(D, index_Swap, size);
+        }
+    
+}
+
+template <typename Type, int Wymiar>
+Data<Type, Wymiar> Heap_Sort(Data<Type, Wymiar> D)
+{
+    for (int i = (Wymiar / 2) - 1; i >= 0; --i)
+    {
+        Shift_Down(D, i, Wymiar);
+    }
+    for (int i = 1; i < Wymiar; ++i)
+    {
+        // std::cout<<D << "przed i=" <<Wymiar-i<<std::endl;
+        Swap(D[0], D[Wymiar - i]);
+        //std::cout<<D << "i=" <<i<<std::endl;
+        Shift_Down(D, 0, Wymiar - i);
+       // std::cout << D << "i=" << i << std::endl;
+    }
+
     return D;
 }
