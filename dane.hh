@@ -9,6 +9,7 @@ class Data
 
   public:
     Data(int nr);
+    void Innit(int nr);
     const Type &operator[](unsigned int index) const
     {
         if (index < Wymiar)
@@ -37,7 +38,31 @@ class Data
         return true;
     }
 };
-
+template <typename Type, int Wymiar>
+void Data<Type, Wymiar>::Innit(int nr)
+{
+    if (nr == 0)
+    {
+        for (unsigned int i = 0; i < Wymiar; ++i)
+        {
+            tab[i] = rand() % Wymiar;
+        }
+    }
+    else if (nr == 1)
+    {
+        for (unsigned int i = 0; i < Wymiar; ++i)
+        {
+            tab[i] = i;
+        }
+    }
+    else if (nr == 2)
+    {
+        for (unsigned int i = 0; i < Wymiar; ++i)
+        {
+            tab[i] = Wymiar - i;
+        }
+    }
+}
 template <typename Type, int Wymiar>
 Data<Type, Wymiar>::Data(int nr)
 {
@@ -168,10 +193,10 @@ void Merge_Sort2(Data<Type, Wymiar> &D, Type *copy, int start_array, int end_arr
 {
     if (start_array < end_array)
     {
-        int q = (start_array + end_array) / 2;
-        Merge_Sort2(D, copy, start_array, q);
-        Merge_Sort2(D, copy, q + 1, end_array);
-        Merge(D, copy, start_array, q, end_array);
+        int half = (start_array + end_array) / 2;
+        Merge_Sort2(D, copy, start_array, half);
+        Merge_Sort2(D, copy, half + 1, end_array);
+        Merge(D, copy, start_array, half, end_array);
     }
 }
 template <typename Type, int Wymiar>
@@ -230,6 +255,50 @@ Data<Type, Wymiar> Heap_Sort(Data<Type, Wymiar> D)
         Shift_Down(D, 0, Wymiar - i);
        // std::cout << D << "i=" << i << std::endl;
     }
-
     return D;
 }
+/*          Quick Sort    */
+template<typename Type,int Wymiar>
+Data<Type,Wymiar> Quick_Sort(Data<Type,Wymiar> D)
+{
+    Quick_Sort2(D,0,Wymiar-1);
+    std::cout<<"Succes?  "<<D.Check_Sort()<< std::endl;
+    return D;
+}
+/*         Sposób wybierania granicy podziału */
+int Choose_lim(int index_l,int index_r)
+{
+    int lim=(index_r+index_l)/2;
+    return lim;
+}
+template<typename Type,int Wymiar>
+int Div_array(Data<Type,Wymiar> &D,int index_left,int index_right)
+{
+    int index_lim=Choose_lim(index_left,index_right);
+    int value_lim=D[index_lim];
+    D[index_lim]=D[index_right];
+    int position=index_left;
+    for(int i=index_left;i<index_right;++i)
+    {     
+        if(D[i]<value_lim)
+        {
+            Swap(D[i],D[position]);
+            ++position;
+        }
+    }
+    D[index_right]=D[position];
+    D[position]=value_lim;
+    return position;
+}
+/*       Quick sort     */
+template<typename Type,int Wymiar> 
+Data<Type,Wymiar> Quick_Sort2(Data<Type,Wymiar> &D,int index_left,int index_right)
+{
+    if(index_left<index_right)
+    {
+        int granica = Div_array(D,index_left,index_right); 
+        if(index_left < granica-1) Quick_Sort2(D,index_left,granica);
+        if(granica+1<index_right) Quick_Sort2(D,granica+1,index_right);
+    }
+}
+
