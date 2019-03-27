@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include <iostream>
-
+#include <time.h>
 ////////////////////////////////////////////////////////////////
 template <typename Type, int Wymiar>
 class Data
@@ -62,6 +62,13 @@ void Data<Type, Wymiar>::Innit(int nr)
             tab[i] = Wymiar - i;
         }
     }
+    else if (nr == 3)
+    {
+        for (unsigned int i = 0; i < Wymiar; ++i)
+        {
+            tab[i] = -Wymiar - i;
+        }
+    }
 }
 template <typename Type, int Wymiar>
 Data<Type, Wymiar>::Data(int nr)
@@ -113,8 +120,11 @@ void Swap(Type &T1, Type &T2)
 template <typename Type, int Wymiar>
 Data<Type, Wymiar> Bumble_Sort(Data<Type, Wymiar> D)
 {
+
     bool change = true;
     unsigned int shift = 1;
+    clock_t start, stop;
+    start = clock();
     while (change)
     {
         change = false;
@@ -128,6 +138,9 @@ Data<Type, Wymiar> Bumble_Sort(Data<Type, Wymiar> D)
         }
         shift++;
     }
+    stop = clock();
+    double czas = (double)(stop - start) / CLOCKS_PER_SEC;
+    std::cout << "Czas trwania: " << czas << std::endl;
     return D;
 }
 /*   Insertion Sort      */
@@ -135,6 +148,8 @@ template <typename Type, int Wymiar>
 Data<Type, Wymiar> Insertion_Sort(Data<Type, Wymiar> D)
 {
     int j;
+    clock_t start, stop;
+    start = clock();
     for (unsigned int i = 1; i < Wymiar; ++i)
     {
         Type r = D[i];
@@ -146,6 +161,9 @@ Data<Type, Wymiar> Insertion_Sort(Data<Type, Wymiar> D)
         }
         D[j + 1] = r;
     }
+    stop = clock();
+    double czas = (double)(stop - start) / CLOCKS_PER_SEC;
+    std::cout << "Czas trwania: " << czas << std::endl;
     return D;
 }
 /*   Merge Sort          */
@@ -203,7 +221,13 @@ template <typename Type, int Wymiar>
 Data<Type, Wymiar> Merge_Sort(Data<Type, Wymiar> D)
 {
     Type *copy = new Type[Wymiar]; //Tablica wymagana do sortowania
+    clock_t start, stop;
+    start = clock();
     Merge_Sort2(D, copy, 0, Wymiar - 1);
+    stop = clock();
+    double czas = (double)(stop - start) / CLOCKS_PER_SEC;
+    std::cout << "Czas trwania: " << czas << std::endl;
+
     delete (copy);
     return D;
 }
@@ -231,18 +255,19 @@ void Shift_Down(Data<Type, Wymiar> &D, int index_parent, int size)
         if (index_L < size)
             index_Swap = index_L;
     }
-    
-        if (D[index_Swap] > D[index_parent])
-        {
-            Swap(D[index_Swap], D[index_parent]);
-            Shift_Down(D, index_Swap, size);
-        }
-    
+
+    if (D[index_Swap] > D[index_parent])
+    {
+        Swap(D[index_Swap], D[index_parent]);
+        Shift_Down(D, index_Swap, size);
+    }
 }
 
 template <typename Type, int Wymiar>
 Data<Type, Wymiar> Heap_Sort(Data<Type, Wymiar> D)
 {
+    clock_t start, stop;
+    start = clock();
     for (int i = (Wymiar / 2) - 1; i >= 0; --i)
     {
         Shift_Down(D, i, Wymiar);
@@ -253,52 +278,94 @@ Data<Type, Wymiar> Heap_Sort(Data<Type, Wymiar> D)
         Swap(D[0], D[Wymiar - i]);
         //std::cout<<D << "i=" <<i<<std::endl;
         Shift_Down(D, 0, Wymiar - i);
-       // std::cout << D << "i=" << i << std::endl;
+        // std::cout << D << "i=" << i << std::endl;
     }
+    stop = clock();
+    double czas = (double)(stop - start) / CLOCKS_PER_SEC;
+    std::cout << "Czas trwania: " << czas << std::endl;
     return D;
 }
 /*          Quick Sort    */
-template<typename Type,int Wymiar>
-Data<Type,Wymiar> Quick_Sort(Data<Type,Wymiar> D)
+template <typename Type, int Wymiar>
+Data<Type, Wymiar> Quick_Sort(Data<Type, Wymiar> D)
 {
-    Quick_Sort2(D,0,Wymiar-1);
-    std::cout<<"Succes?  "<<D.Check_Sort()<< std::endl;
+    clock_t start, stop;
+    start = clock();
+    Quick_Sort2(D, 0, Wymiar - 1);
+    stop = clock();
+    double czas = (double)(stop - start) / CLOCKS_PER_SEC;
+    std::cout << "Czas trwania: " << czas << std::endl;
+
     return D;
 }
-/*         Sposób wybierania granicy podziału */
-int Choose_lim(int index_l,int index_r)
+/*         Sposób wybierania piwota */
+int Choose_lim(int index_l, int index_r)
 {
-    int lim=(index_r+index_l)/2;
+    int lim = (index_r + index_l) / 2;
     return lim;
 }
-template<typename Type,int Wymiar>
-int Div_array(Data<Type,Wymiar> &D,int index_left,int index_right)
+template <typename Type, int Wymiar>
+int Div_array(Data<Type, Wymiar> &D, int index_left, int index_right)
 {
-    int index_lim=Choose_lim(index_left,index_right);
-    int value_lim=D[index_lim];
-    D[index_lim]=D[index_right];
-    int position=index_left;
-    for(int i=index_left;i<index_right;++i)
-    {     
-        if(D[i]<value_lim)
+    int index_lim = Choose_lim(index_left, index_right);
+    int value_lim = D[index_lim];
+    D[index_lim] = D[index_right];
+    int position = index_left;
+    for (int i = index_left; i < index_right; ++i)
+    {
+        if (D[i] < value_lim)
         {
-            Swap(D[i],D[position]);
+            Swap(D[i], D[position]);
             ++position;
         }
     }
-    D[index_right]=D[position];
-    D[position]=value_lim;
+    D[index_right] = D[position];
+    D[position] = value_lim;
     return position;
 }
 /*       Quick sort     */
-template<typename Type,int Wymiar> 
-Data<Type,Wymiar> Quick_Sort2(Data<Type,Wymiar> &D,int index_left,int index_right)
+template <typename Type, int Wymiar>
+Data<Type, Wymiar> Quick_Sort2(Data<Type, Wymiar> &D, int index_left, int index_right)
 {
-    if(index_left<index_right)
+    if (index_left < index_right)
     {
-        int granica = Div_array(D,index_left,index_right); 
-        if(index_left < granica-1) Quick_Sort2(D,index_left,granica);
-        if(granica+1<index_right) Quick_Sort2(D,granica+1,index_right);
+        int granica = Div_array(D, index_left, index_right);
+        if (index_left < granica - 1)
+            Quick_Sort2(D, index_left, granica);
+        if (granica + 1 < index_right)
+            Quick_Sort2(D, granica + 1, index_right);
     }
 }
+template <typename Type, int Wymiar>
+Data<Type, Wymiar> Shell_Sort(Data<Type, Wymiar> D)
+{
+    clock_t start, stop;
+    start = clock();
+    bool change=1;
+    int tab_odl[8] = {701, 301, 132, 57, 23, 10, 4, 1};
+    for (int odl = 0; odl < 8; ++odl)
+    {
 
+        unsigned int shift = 0;
+        while (change)
+        {
+            change = false;
+            for (unsigned int i = 0; i < Wymiar - shift; ++i)
+            {
+                if (tab_odl[odl] + i < Wymiar)
+                {
+                    if (D[i + 1] < D[i])
+                    {
+                        Swap(D[i + 1], D[i]);
+                        change = true;
+                    }
+                }
+            }
+            shift++;
+        }
+    }
+    stop = clock();
+    double czas = (double)(stop - start) / CLOCKS_PER_SEC;
+    std::cout << "Czas trwania: " << czas << std::endl;
+    return D;
+}

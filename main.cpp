@@ -7,7 +7,7 @@
 using namespace std;
 
 
-#define ROZMIAR 1000
+#define ROZMIAR 5000
 int main()
 {
     /*
@@ -40,11 +40,20 @@ int main()
    // Data<int,ROZMIAR> Sorted_Data(1);
     for(int i =0;i<100;++i)
     {
-        D->Innit(1);
-        Quick_Sort(*D);
+        D->Innit(3);
+        cout<<"Succes?  ";
+        cout<<Bumble_Sort(*D).Check_Sort()<<endl;
     //cout<<"Succes?  "<<Sorted_Data.Check_Sort()<< endl;
     }
-   //cout<<"Niby posortowane    "<<Sorted_Data<<endl<<endl;
+      cout<<"++++++++++++++++++++++++++++++++++++++"<<endl;
+   
+    for(int i =0;i<100;++i)
+    {
+        D->Innit(3);
+        cout<<"Succes?  ";
+        cout<<Shell_Sort(*D).Check_Sort()<<endl;
+    //cout<<"Succes?  "<<Sorted_Data.Check_Sort()<< endl;
+    }//cout<<"Niby posortowane    "<<Sorted_Data<<endl<<endl;
    delete(D);
 
     //Sorted_Data= Insertion_Sort(D);
