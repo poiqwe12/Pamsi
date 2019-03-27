@@ -3,64 +3,57 @@
 #include "dane.hh"
 #include <iostream>
 
-
 using namespace std;
 
-
-#define ROZMIAR 5000
 int main()
 {
-    /*
-    for(int i = 0;i<3;i++)
     {
-    Data<int,ROZMIAR> *D=new Data<int,ROZMIAR>(i);
-    cout<<"Nieposrtowane dane: "<<*D<<endl;
-    //Marge(D,10,100);
-    Data<int,ROZMIAR> Sorted_Data=Heap_Sort(*D);
-    cout<<"Succes?  "<<Sorted_Data.Check_Sort()<< endl;
-   cout<<"Niby posortowane    "<<Sorted_Data<<endl<<endl;
-   delete(D);
-    }
-    cout<<"-----Sortowanie Scalanie-------"<<endl;
-    for(int i = 0;i<3;i++)
-    {
-    Data<int,ROZMIAR> *D=new Data<int,ROZMIAR>(i);
-    cout<<"Nieposrtowane dane: "<<*D<<endl;
-    //Marge(D,10,100);
-    Data<int,ROZMIAR> Sorted_Data=Merge_Sort(*D);
-    cout<<"Succes?  "<<Sorted_Data.Check_Sort()<< endl;
-   cout<<"Niby posortowane    "<<Sorted_Data<<endl<<endl;
-   delete(D);
-    }
-    */
-    cout<<"++++++++++++++++++++++++++++++++++++++"<<endl;
-    Data<int,ROZMIAR> *D=new Data<int,ROZMIAR>(0);
-    cout<<"Nieposrtowane dane: "<<endl;
-    //Marge(D,10,100);
-   // Data<int,ROZMIAR> Sorted_Data(1);
-    for(int i =0;i<100;++i)
-    {
-        D->Innit(3);
-        cout<<"Succes?  ";
-        cout<<Bumble_Sort(*D).Check_Sort()<<endl;
-    //cout<<"Succes?  "<<Sorted_Data.Check_Sort()<< endl;
-    }
-      cout<<"++++++++++++++++++++++++++++++++++++++"<<endl;
-   
-    for(int i =0;i<100;++i)
-    {
-        D->Innit(3);
-        cout<<"Succes?  ";
-        cout<<Shell_Sort(*D).Check_Sort()<<endl;
-    //cout<<"Succes?  "<<Sorted_Data.Check_Sort()<< endl;
-    }//cout<<"Niby posortowane    "<<Sorted_Data<<endl<<endl;
-   delete(D);
+        const int Wymiar = 1000;
+        int typ = 0;
+        Data<int, Wymiar> *D = new Data<int, Wymiar>;
 
-    //Sorted_Data= Insertion_Sort(D);
-    //cout<<"Succes?  "<<Sorted_Data.Check_Sort()<<endl;
-    //cout<< Sorted_Data;
-    
-    
-   
-   return 0;
+        for (int j = 0; j < 8; ++j)
+        {
+            std::ofstream plik("Heap_Sort.txt", std::ios_base::app);
+            if (plik.good() == true)
+            {
+                plik << Wymiar << " elementow typ: " << j << std::endl;
+                plik.close();
+            }
+            std::ofstream plik1("Merge_Sort.txt", std::ios_base::app);
+            if (plik.good() == true)
+            {
+                plik1 << Wymiar << " elementow typ: " << j << std::endl;
+                plik1.close();
+            }
+            D->Innit(j);
+            for (int i = 0; i < 100; ++i)
+            {
+                cout << Heap_Sort(*D).Check_Sort() << endl;
+                cout << Merge_Sort(*D).Check_Sort() << endl;
+            }
+        }
+        delete (D);
+    }
+
+    const int Wymiar = 10000;
+    Data<int, Wymiar> *D = new Data<int, Wymiar>;
+
+    for (int j = 0; j < 8; ++j)
+    {
+        std::ofstream plik("Heap_Sort.txt", std::ios_base::app);
+        if (plik.good() == true)
+        {
+            plik << Wymiar << " elementow typ: " << j << std::endl;
+            plik.close();
+        }
+        for (int i = 0; i < 100; ++i)
+        {
+            D->Innit(j);
+            cout << Heap_Sort(*D).Check_Sort() << endl;
+        }
+    }
+    delete (D);
+
+    return 0;
 }

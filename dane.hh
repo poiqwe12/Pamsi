@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <time.h>
+#include <fstream>
 ////////////////////////////////////////////////////////////////
 template <typename Type, int Wymiar>
 class Data
@@ -8,7 +9,6 @@ class Data
     Type tab[Wymiar];
 
   public:
-    Data(int nr);
     void Innit(int nr);
     const Type &operator[](unsigned int index) const
     {
@@ -38,56 +38,120 @@ class Data
         return true;
     }
 };
+
+
+
+
+
+
+/*     Inicjalizacja danych do posotrowania    */
+/*
+    ARG nr 
+    0 - wszystkie el losowe
+    1 - 25% posortowane
+    2 - 50% posortowane
+    3 - 75% posortowane
+    4 - 95% posortowane
+    5 - 99% posortowane
+    6 - 99,7% posortowane 
+    7 - posortowane w odwrotnej kolejnosci
+*/
 template <typename Type, int Wymiar>
 void Data<Type, Wymiar>::Innit(int nr)
 {
     if (nr == 0)
     {
-        for (unsigned int i = 0; i < Wymiar; ++i)
+        for (unsigned int i = 0; i < Wymiar / 2; ++i)
         {
             tab[i] = rand() % Wymiar;
+            tab[2 * i] = -rand() % Wymiar;
         }
     }
     else if (nr == 1)
     {
         for (unsigned int i = 0; i < Wymiar; ++i)
         {
-            tab[i] = i;
+            if (i < Wymiar / 4)
+            {
+                tab[i] = i;
+            }
+            else
+            {
+                tab[i] = rand() % Wymiar;
+            }
         }
     }
     else if (nr == 2)
     {
         for (unsigned int i = 0; i < Wymiar; ++i)
         {
-            tab[i] = Wymiar - i;
+            if (i < Wymiar / 2)
+            {
+                tab[i] = i;
+            }
+            else
+            {
+                tab[i] = rand() % Wymiar;
+            }
         }
     }
     else if (nr == 3)
     {
         for (unsigned int i = 0; i < Wymiar; ++i)
         {
-            tab[i] = -Wymiar - i;
+            if (i < Wymiar * 3 / 4)
+            {
+                tab[i] = i;
+            }
+            else
+            {
+                tab[i] = rand() % Wymiar;
+            }
         }
     }
-}
-template <typename Type, int Wymiar>
-Data<Type, Wymiar>::Data(int nr)
-{
-    if (nr == 0)
+    else if (nr == 4)
     {
         for (unsigned int i = 0; i < Wymiar; ++i)
         {
-            tab[i] = rand() % Wymiar;
+            if (i < Wymiar * 95 / 100)
+            {
+                tab[i] = i;
+            }
+            else
+            {
+                tab[i] = rand() % Wymiar;
+            }
         }
     }
-    else if (nr == 1)
+    else if (nr == 5)
     {
         for (unsigned int i = 0; i < Wymiar; ++i)
         {
-            tab[i] = i;
+            if (i < Wymiar * 99 / 100)
+            {
+                tab[i] = i;
+            }
+            else
+            {
+                tab[i] = rand() % Wymiar;
+            }
         }
     }
-    else if (nr == 2)
+    else if (nr == 6)
+    {
+        for (unsigned int i = 0; i < Wymiar; ++i)
+        {
+            if (i < Wymiar * 99, 7 / 100)
+            {
+                tab[i] = i;
+            }
+            else
+            {
+                tab[i] = rand() % Wymiar;
+            }
+        }
+    }
+    else if (nr == 7)
     {
         for (unsigned int i = 0; i < Wymiar; ++i)
         {
@@ -95,6 +159,8 @@ Data<Type, Wymiar>::Data(int nr)
         }
     }
 }
+
+/*     Wyswietlanie sortowanych danych    */
 template <typename Type, int Wymiar>
 std::ostream &operator<<(std::ostream &stream, Data<Type, Wymiar> D)
 {
@@ -113,7 +179,6 @@ void Swap(Type &T1, Type &T2)
     Type T3 = T1;
     T1 = T2;
     T2 = T3;
-    //std::cout<<"a";
 }
 
 /*   Bumble Sort         */
@@ -138,11 +203,21 @@ Data<Type, Wymiar> Bumble_Sort(Data<Type, Wymiar> D)
         }
         shift++;
     }
+    /////////////////////////////////////////////////////////
     stop = clock();
     double czas = (double)(stop - start) / CLOCKS_PER_SEC;
-    std::cout << "Czas trwania: " << czas << std::endl;
+    /////////////////////////////////////////////////////////
+    std::ofstream plik("Buble_Sort.txt", std::ios_base::app);
+    if (plik.good() == true)
+    {
+        std::cout << "Czas trwania: " << czas << std::endl;
+        plik << czas<<std::endl;
+        plik.close();
+    }
     return D;
 }
+
+
 /*   Insertion Sort      */
 template <typename Type, int Wymiar>
 Data<Type, Wymiar> Insertion_Sort(Data<Type, Wymiar> D)
@@ -161,11 +236,21 @@ Data<Type, Wymiar> Insertion_Sort(Data<Type, Wymiar> D)
         }
         D[j + 1] = r;
     }
+    //////////////////////////////////////////////////////
     stop = clock();
     double czas = (double)(stop - start) / CLOCKS_PER_SEC;
-    std::cout << "Czas trwania: " << czas << std::endl;
+    //////////////////////////////////////////////////////
+    std::ofstream plik("Insertion_Sort.txt", std::ios_base::app);
+    if (plik.good() == true)
+    {
+        std::cout << "Czas trwania: " << czas << std::endl;
+        plik << czas<<std::endl;
+        plik.close();
+    }
     return D;
 }
+
+
 /*   Merge Sort          */
 template <typename Type, int Wymiar>
 void Merge(Data<Type, Wymiar> &D, Type *copy, int start, int mid, int end)
@@ -226,7 +311,13 @@ Data<Type, Wymiar> Merge_Sort(Data<Type, Wymiar> D)
     Merge_Sort2(D, copy, 0, Wymiar - 1);
     stop = clock();
     double czas = (double)(stop - start) / CLOCKS_PER_SEC;
-    std::cout << "Czas trwania: " << czas << std::endl;
+   std::ofstream plik("Merge_Sort.txt", std::ios_base::app);
+    if (plik.good() == true)
+    {
+        std::cout << "Czas trwania: " << czas << std::endl;
+        plik << czas<<std::endl;
+        plik.close();
+    }
 
     delete (copy);
     return D;
@@ -282,7 +373,13 @@ Data<Type, Wymiar> Heap_Sort(Data<Type, Wymiar> D)
     }
     stop = clock();
     double czas = (double)(stop - start) / CLOCKS_PER_SEC;
-    std::cout << "Czas trwania: " << czas << std::endl;
+   std::ofstream plik("Heap_Sort.txt", std::ios_base::app);
+    if (plik.good() == true)
+    {
+        std::cout << "Czas trwania: " << czas << std::endl;
+        plik << czas<<std::endl;
+        plik.close();
+    }
     return D;
 }
 /*          Quick Sort    */
@@ -291,19 +388,30 @@ Data<Type, Wymiar> Quick_Sort(Data<Type, Wymiar> D)
 {
     clock_t start, stop;
     start = clock();
+    /////////////////////////////
     Quick_Sort2(D, 0, Wymiar - 1);
+    /////////////////////////////
     stop = clock();
     double czas = (double)(stop - start) / CLOCKS_PER_SEC;
-    std::cout << "Czas trwania: " << czas << std::endl;
+    std::ofstream plik("Quick_Sort.txt", std::ios_base::app);
+    if (plik.good() == true)
+    {
+        std::cout << "Czas trwania: " << czas << std::endl;
+        plik << czas<<std::endl;
+        plik.close();
+    }
 
     return D;
 }
+
 /*         Sposób wybierania piwota */
 int Choose_lim(int index_l, int index_r)
 {
     int lim = (index_r + index_l) / 2;
     return lim;
 }
+
+
 template <typename Type, int Wymiar>
 int Div_array(Data<Type, Wymiar> &D, int index_left, int index_right)
 {
@@ -323,6 +431,8 @@ int Div_array(Data<Type, Wymiar> &D, int index_left, int index_right)
     D[position] = value_lim;
     return position;
 }
+
+
 /*       Quick sort     */
 template <typename Type, int Wymiar>
 Data<Type, Wymiar> Quick_Sort2(Data<Type, Wymiar> &D, int index_left, int index_right)
@@ -336,12 +446,15 @@ Data<Type, Wymiar> Quick_Sort2(Data<Type, Wymiar> &D, int index_left, int index_
             Quick_Sort2(D, granica + 1, index_right);
     }
 }
+
+
+/*      Shell Sort     */
 template <typename Type, int Wymiar>
 Data<Type, Wymiar> Shell_Sort(Data<Type, Wymiar> D)
 {
     clock_t start, stop;
     start = clock();
-    bool change=1;
+    bool change = 1;
     int tab_odl[8] = {701, 301, 132, 57, 23, 10, 4, 1};
     for (int odl = 0; odl < 8; ++odl)
     {
@@ -350,18 +463,18 @@ Data<Type, Wymiar> Shell_Sort(Data<Type, Wymiar> D)
         while (change)
         {
             change = false;
-            for (unsigned int i = 0; i < Wymiar - shift; ++i)
+            for (unsigned int i = 0; i < Wymiar; ++i)
             {
                 if (tab_odl[odl] + i < Wymiar)
                 {
-                    if (D[i + 1] < D[i])
+                    if (D[i + tab_odl[odl]] < D[i])
                     {
-                        Swap(D[i + 1], D[i]);
+                        Swap(D[i + tab_odl[odl]], D[i]);
                         change = true;
                     }
                 }
             }
-            shift++;
+            //shift++;
         }
     }
     stop = clock();
@@ -369,3 +482,19 @@ Data<Type, Wymiar> Shell_Sort(Data<Type, Wymiar> D)
     std::cout << "Czas trwania: " << czas << std::endl;
     return D;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
