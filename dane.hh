@@ -3,6 +3,7 @@
 #include <time.h>
 #include <fstream>
 ////////////////////////////////////////////////////////////////
+
 template <typename Type, int Wymiar>
 class Data
 {
@@ -39,11 +40,6 @@ class Data
     }
 };
 
-
-
-
-
-
 /*     Inicjalizacja danych do posotrowania    */
 /*
     ARG nr 
@@ -59,6 +55,7 @@ class Data
 template <typename Type, int Wymiar>
 void Data<Type, Wymiar>::Innit(int nr)
 {
+    srand(time(NULL));
     if (nr == 0)
     {
         for (unsigned int i = 0; i < Wymiar / 2; ++i)
@@ -211,12 +208,11 @@ Data<Type, Wymiar> Bumble_Sort(Data<Type, Wymiar> D)
     if (plik.good() == true)
     {
         std::cout << "Czas trwania: " << czas << std::endl;
-        plik << czas<<std::endl;
+        plik << czas << std::endl;
         plik.close();
     }
     return D;
 }
-
 
 /*   Insertion Sort      */
 template <typename Type, int Wymiar>
@@ -244,12 +240,11 @@ Data<Type, Wymiar> Insertion_Sort(Data<Type, Wymiar> D)
     if (plik.good() == true)
     {
         std::cout << "Czas trwania: " << czas << std::endl;
-        plik << czas<<std::endl;
+        plik << czas << std::endl;
         plik.close();
     }
     return D;
 }
-
 
 /*   Merge Sort          */
 template <typename Type, int Wymiar>
@@ -311,11 +306,11 @@ Data<Type, Wymiar> Merge_Sort(Data<Type, Wymiar> D)
     Merge_Sort2(D, copy, 0, Wymiar - 1);
     stop = clock();
     double czas = (double)(stop - start) / CLOCKS_PER_SEC;
-   std::ofstream plik("Merge_Sort.txt", std::ios_base::app);
+    std::ofstream plik("Merge_Sort.txt", std::ios_base::app);
     if (plik.good() == true)
     {
         std::cout << "Czas trwania: " << czas << std::endl;
-        plik << czas<<std::endl;
+        plik << czas << std::endl;
         plik.close();
     }
 
@@ -365,19 +360,18 @@ Data<Type, Wymiar> Heap_Sort(Data<Type, Wymiar> D)
     }
     for (int i = 1; i < Wymiar; ++i)
     {
-        // std::cout<<D << "przed i=" <<Wymiar-i<<std::endl;
+
         Swap(D[0], D[Wymiar - i]);
-        //std::cout<<D << "i=" <<i<<std::endl;
         Shift_Down(D, 0, Wymiar - i);
-        // std::cout << D << "i=" << i << std::endl;
     }
+    
     stop = clock();
     double czas = (double)(stop - start) / CLOCKS_PER_SEC;
-   std::ofstream plik("Heap_Sort.txt", std::ios_base::app);
+    std::ofstream plik("Heap_Sort.txt", std::ios_base::app);
     if (plik.good() == true)
     {
         std::cout << "Czas trwania: " << czas << std::endl;
-        plik << czas<<std::endl;
+        plik << czas << std::endl;
         plik.close();
     }
     return D;
@@ -397,7 +391,7 @@ Data<Type, Wymiar> Quick_Sort(Data<Type, Wymiar> D)
     if (plik.good() == true)
     {
         std::cout << "Czas trwania: " << czas << std::endl;
-        plik << czas<<std::endl;
+        plik << czas << std::endl;
         plik.close();
     }
 
@@ -410,7 +404,6 @@ int Choose_lim(int index_l, int index_r)
     int lim = (index_r + index_l) / 2;
     return lim;
 }
-
 
 template <typename Type, int Wymiar>
 int Div_array(Data<Type, Wymiar> &D, int index_left, int index_right)
@@ -432,7 +425,6 @@ int Div_array(Data<Type, Wymiar> &D, int index_left, int index_right)
     return position;
 }
 
-
 /*       Quick sort     */
 template <typename Type, int Wymiar>
 Data<Type, Wymiar> Quick_Sort2(Data<Type, Wymiar> &D, int index_left, int index_right)
@@ -447,7 +439,6 @@ Data<Type, Wymiar> Quick_Sort2(Data<Type, Wymiar> &D, int index_left, int index_
     }
 }
 
-
 /*      Shell Sort     */
 template <typename Type, int Wymiar>
 Data<Type, Wymiar> Shell_Sort(Data<Type, Wymiar> D)
@@ -455,46 +446,77 @@ Data<Type, Wymiar> Shell_Sort(Data<Type, Wymiar> D)
     clock_t start, stop;
     start = clock();
     bool change = 1;
-    int tab_odl[8] = {701, 301, 132, 57, 23, 10, 4, 1};
-    for (int odl = 0; odl < 8; ++odl)
+    int tab_odl[] = {1400,701, 301, 132, 57, 23, 10, 4, 1};
+    for (int odl = 0; odl < 9; ++odl)
     {
-
-        unsigned int shift = 0;
+        change = 1;
         while (change)
         {
             change = false;
-            for (unsigned int i = 0; i < Wymiar; ++i)
+            if (tab_odl[odl] < Wymiar)
             {
-                if (tab_odl[odl] + i < Wymiar)
+                for (unsigned int i = tab_odl[odl]; i < Wymiar; ++i)
                 {
-                    if (D[i + tab_odl[odl]] < D[i])
+                    if (D[i - tab_odl[odl]] > D[i])
                     {
-                        Swap(D[i + tab_odl[odl]], D[i]);
+                        Swap(D[i - tab_odl[odl]], D[i]);
                         change = true;
                     }
                 }
             }
-            //shift++;
         }
     }
     stop = clock();
     double czas = (double)(stop - start) / CLOCKS_PER_SEC;
-    std::cout << "Czas trwania: " << czas << std::endl;
+    std::ofstream plik("Shell_Sort.txt", std::ios_base::app);
+    if (plik.good() == true)
+    {
+        std::cout << "Czas trwania: " << czas << std::endl;
+        plik << czas << std::endl;
+        plik.close();
+    }
     return D;
 }
 
+/*
+            Funkcje do sortowania 100 tablic o rozniej ilosci elementow
+*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+template <typename Type, int Wymiar>
+void Sortowanie(Data<Type, Wymiar> &D)
+{
+    for (int j = 0; j < 8; ++j)
+    {
+        std::ofstream plik("Heap_Sort.txt", std::ios_base::app);
+        if (plik.good() == true)
+        {
+            plik << Wymiar << " elementow typ: " << j << std::endl;
+            plik.close();
+        }
+        std::ofstream plik1("Merge_Sort.txt", std::ios_base::app);
+        if (plik.good() == true)
+        {
+            plik1 << Wymiar << " elementow typ: " << j << std::endl;
+            plik1.close();
+        }
+        std::ofstream plik2("Quick_Sort.txt", std::ios_base::app);
+        if (plik.good() == true)
+        {
+            plik2 << Wymiar << " elementow typ: " << j << std::endl;
+            plik2.close();
+        }
+         std::ofstream plik3("Shell_Sort.txt", std::ios_base::app);
+        if (plik.good() == true)
+        {
+            plik2 << Wymiar << " elementow typ: " << j << std::endl;
+            plik2.close();
+        }
+        D.Innit(j);
+        for (int i = 0; i < 100; ++i)
+        {
+            std::cout << Heap_Sort(D).Check_Sort() << std::endl;
+            std::cout << Merge_Sort(D).Check_Sort() << std::endl;
+            std::cout << Shell_Sort(D).Check_Sort() << std::endl;
+        }
+    }
+}
