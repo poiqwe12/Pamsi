@@ -204,11 +204,11 @@ Data<Type, Wymiar> Bumble_Sort(Data<Type, Wymiar> D)
     stop = clock();
     double czas = (double)(stop - start) / CLOCKS_PER_SEC;
     /////////////////////////////////////////////////////////
-    std::ofstream plik("Buble_Sort.txt", std::ios_base::app);
+    std::ofstream plik("Buble_Sort.csv", std::ios_base::app);
     if (plik.good() == true)
     {
         std::cout << "Czas trwania: " << czas << std::endl;
-        plik << czas << std::endl;
+        plik << czas;
         plik.close();
     }
     return D;
@@ -236,11 +236,11 @@ Data<Type, Wymiar> Insertion_Sort(Data<Type, Wymiar> D)
     stop = clock();
     double czas = (double)(stop - start) / CLOCKS_PER_SEC;
     //////////////////////////////////////////////////////
-    std::ofstream plik("Insertion_Sort.txt", std::ios_base::app);
+    std::ofstream plik("Insertion_Sort.csv", std::ios_base::app);
     if (plik.good() == true)
     {
         std::cout << "Czas trwania: " << czas << std::endl;
-        plik << czas << std::endl;
+        plik << czas ;
         plik.close();
     }
     return D;
@@ -306,7 +306,7 @@ Data<Type, Wymiar> Merge_Sort(Data<Type, Wymiar> D)
     Merge_Sort2(D, copy, 0, Wymiar - 1);
     stop = clock();
     double czas = (double)(stop - start) / CLOCKS_PER_SEC;
-    std::ofstream plik("Merge_Sort.txt", std::ios_base::app);
+    std::ofstream plik("Merge_Sort.csv", std::ios_base::app);
     if (plik.good() == true)
     {
         std::cout << "Czas trwania: " << czas << std::endl;
@@ -364,14 +364,14 @@ Data<Type, Wymiar> Heap_Sort(Data<Type, Wymiar> D)
         Swap(D[0], D[Wymiar - i]);
         Shift_Down(D, 0, Wymiar - i);
     }
-    
+
     stop = clock();
     double czas = (double)(stop - start) / CLOCKS_PER_SEC;
-    std::ofstream plik("Heap_Sort.txt", std::ios_base::app);
+    std::ofstream plik("Heap_Sort.csv", std::ios_base::app);
     if (plik.good() == true)
     {
         std::cout << "Czas trwania: " << czas << std::endl;
-        plik << czas << std::endl;
+        plik << czas;
         plik.close();
     }
     return D;
@@ -387,10 +387,10 @@ Data<Type, Wymiar> Quick_Sort(Data<Type, Wymiar> D)
     /////////////////////////////
     stop = clock();
     double czas = (double)(stop - start) / CLOCKS_PER_SEC;
-    std::ofstream plik("Quick_Sort.txt", std::ios_base::app);
+    std::ofstream plik("Quick_Sort.csv", std::ios_base::app);
     if (plik.good() == true)
     {
-        std::cout << "Czas trwania: " << czas << std::endl;
+        std::cout << "Czas trwania: " << czas;
         plik << czas << std::endl;
         plik.close();
     }
@@ -446,7 +446,7 @@ Data<Type, Wymiar> Shell_Sort(Data<Type, Wymiar> D)
     clock_t start, stop;
     start = clock();
     bool change = 1;
-    int tab_odl[] = {1400,701, 301, 132, 57, 23, 10, 4, 1};
+    int tab_odl[] = {1400, 701, 301, 132, 57, 23, 10, 4, 1};
     for (int odl = 0; odl < 9; ++odl)
     {
         change = 1;
@@ -468,7 +468,7 @@ Data<Type, Wymiar> Shell_Sort(Data<Type, Wymiar> D)
     }
     stop = clock();
     double czas = (double)(stop - start) / CLOCKS_PER_SEC;
-    std::ofstream plik("Shell_Sort.txt", std::ios_base::app);
+    std::ofstream plik("Shell_Sort.csv", std::ios_base::app);
     if (plik.good() == true)
     {
         std::cout << "Czas trwania: " << czas << std::endl;
@@ -505,18 +505,108 @@ void Sortowanie(Data<Type, Wymiar> &D)
             plik2 << Wymiar << " elementow typ: " << j << std::endl;
             plik2.close();
         }
-         std::ofstream plik3("Shell_Sort.txt", std::ios_base::app);
+        std::ofstream plik3("Shell_Sort.txt", std::ios_base::app);
         if (plik.good() == true)
         {
-            plik2 << Wymiar << " elementow typ: " << j << std::endl;
-            plik2.close();
+            plik3 << Wymiar << " elementow typ: " << j << std::endl;
+            plik3.close();
         }
-        D.Innit(j);
+
         for (int i = 0; i < 100; ++i)
         {
+            D.Innit(j);
             std::cout << Heap_Sort(D).Check_Sort() << std::endl;
             std::cout << Merge_Sort(D).Check_Sort() << std::endl;
             std::cout << Shell_Sort(D).Check_Sort() << std::endl;
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////
+template <typename Type, int Wymiar>
+void Sortowanie2(Data<Type, Wymiar> &D)
+{
+            std::ofstream plik("Heap_Sort.csv", std::ios_base::app);
+            if (plik.good() == true)
+            {
+                plik << "Sortowanie "<<Wymiar<<"elementow"<<std::endl;
+                plik.close();
+            }
+            std::ofstream plik1("Merge_Sort.csv", std::ios_base::app);
+            if (plik.good() == true)
+            {
+                plik1 << "Sortowanie "<<Wymiar<<"elementow"<<std::endl;
+                plik1.close();
+            }
+            std::ofstream plik2("Quick_Sort.csv", std::ios_base::app);
+            if (plik.good() == true)
+            {
+                plik2 << "Sortowanie "<<Wymiar<<"elementow"<<std::endl;
+                plik2.close();
+            }
+            std::ofstream plik3("Shell_Sort.csv", std::ios_base::app);
+            if (plik.good() == true)
+            {
+                plik3 << "Sortowanie "<<Wymiar<<"elementow"<<std::endl;
+                plik3.close();
+            }
+    for (int i = 0; i < 100; ++i)
+    {
+
+        for (int j = 0; j < 8; ++j)
+        {
+            std::ofstream plik("Heap_Sort.csv", std::ios_base::app);
+            if (plik.good() == true)
+            {
+                plik << " \t";
+                plik.close();
+            }
+            std::ofstream plik1("Merge_Sort.csv", std::ios_base::app);
+            if (plik.good() == true)
+            {
+                plik1 << " \t";
+                plik1.close();
+            }
+            std::ofstream plik2("Quick_Sort.csv", std::ios_base::app);
+            if (plik.good() == true)
+            {
+                plik2 << "\t";
+                plik2.close();
+            }
+            std::ofstream plik3("Shell_Sort.csv", std::ios_base::app);
+            if (plik.good() == true)
+            {
+                plik3 << "/t";
+                plik3.close();
+            }
+
+            D.Innit(j);
+            std::cout << Heap_Sort(D).Check_Sort() << std::endl;
+            std::cout << Merge_Sort(D).Check_Sort() << std::endl;
+            std::cout << Shell_Sort(D).Check_Sort() << std::endl;
+        }
+        std::ofstream plik("Heap_Sort.csv", std::ios_base::app);
+        if (plik.good() == true)
+        {
+            plik << " \n";
+            plik.close();
+        }
+        std::ofstream plik1("Merge_Sort.csv", std::ios_base::app);
+        if (plik.good() == true)
+        {
+            plik1 << " \n";
+            plik1.close();
+        }
+        std::ofstream plik2("Quick_Sort.csv", std::ios_base::app);
+        if (plik.good() == true)
+        {
+            plik2 << "\n";
+            plik2.close();
+        }
+        std::ofstream plik3("Shell_Sort.csv", std::ios_base::app);
+        if (plik.good() == true)
+        {
+            plik3 << "/n";
+            plik3.close();
         }
     }
 }
