@@ -309,8 +309,8 @@ Data<Type, Wymiar> Merge_Sort(Data<Type, Wymiar> D)
     std::ofstream plik("Merge_Sort.csv", std::ios_base::app);
     if (plik.good() == true)
     {
-        std::cout << "Czas trwania: " << czas << std::endl;
-        plik << czas << std::endl;
+       // std::cout << "Czas trwania: " << czas << std::endl;
+        plik << czas;
         plik.close();
     }
 
@@ -370,7 +370,7 @@ Data<Type, Wymiar> Heap_Sort(Data<Type, Wymiar> D)
     std::ofstream plik("Heap_Sort.csv", std::ios_base::app);
     if (plik.good() == true)
     {
-        std::cout << "Czas trwania: " << czas << std::endl;
+        //std::cout << "Czas trwania: " << czas << std::endl;
         plik << czas;
         plik.close();
     }
@@ -390,8 +390,8 @@ Data<Type, Wymiar> Quick_Sort(Data<Type, Wymiar> D)
     std::ofstream plik("Quick_Sort.csv", std::ios_base::app);
     if (plik.good() == true)
     {
-        std::cout << "Czas trwania: " << czas;
-        plik << czas << std::endl;
+        //std::cout << "Czas trwania: " << czas;
+        plik << czas;
         plik.close();
     }
 
@@ -427,14 +427,13 @@ int Div_array(Data<Type, Wymiar> &D, int index_left, int index_right)
 
 /*       Quick sort     */
 template <typename Type, int Wymiar>
-Data<Type, Wymiar> Quick_Sort2(Data<Type, Wymiar> &D, int index_left, int index_right)
+void Quick_Sort2(Data<Type, Wymiar> &D, int index_left, int index_right)
 {
     if (index_left < index_right)
     {
         int granica = Div_array(D, index_left, index_right);
-        if (index_left < granica - 1)
-            Quick_Sort2(D, index_left, granica);
-        if (granica + 1 < index_right)
+    
+            Quick_Sort2(D, index_left, granica);       
             Quick_Sort2(D, granica + 1, index_right);
     }
 }
@@ -471,8 +470,8 @@ Data<Type, Wymiar> Shell_Sort(Data<Type, Wymiar> D)
     std::ofstream plik("Shell_Sort.csv", std::ios_base::app);
     if (plik.good() == true)
     {
-        std::cout << "Czas trwania: " << czas << std::endl;
-        plik << czas << std::endl;
+        //std::cout << "Czas trwania: " << czas << std::endl;
+        plik << czas ;
         plik.close();
     }
     return D;
@@ -481,46 +480,6 @@ Data<Type, Wymiar> Shell_Sort(Data<Type, Wymiar> D)
 /*
             Funkcje do sortowania 100 tablic o rozniej ilosci elementow
 */
-
-template <typename Type, int Wymiar>
-void Sortowanie(Data<Type, Wymiar> &D)
-{
-    for (int j = 0; j < 8; ++j)
-    {
-        std::ofstream plik("Heap_Sort.txt", std::ios_base::app);
-        if (plik.good() == true)
-        {
-            plik << Wymiar << " elementow typ: " << j << std::endl;
-            plik.close();
-        }
-        std::ofstream plik1("Merge_Sort.txt", std::ios_base::app);
-        if (plik.good() == true)
-        {
-            plik1 << Wymiar << " elementow typ: " << j << std::endl;
-            plik1.close();
-        }
-        std::ofstream plik2("Quick_Sort.txt", std::ios_base::app);
-        if (plik.good() == true)
-        {
-            plik2 << Wymiar << " elementow typ: " << j << std::endl;
-            plik2.close();
-        }
-        std::ofstream plik3("Shell_Sort.txt", std::ios_base::app);
-        if (plik.good() == true)
-        {
-            plik3 << Wymiar << " elementow typ: " << j << std::endl;
-            plik3.close();
-        }
-
-        for (int i = 0; i < 100; ++i)
-        {
-            D.Innit(j);
-            std::cout << Heap_Sort(D).Check_Sort() << std::endl;
-            std::cout << Merge_Sort(D).Check_Sort() << std::endl;
-            std::cout << Shell_Sort(D).Check_Sort() << std::endl;
-        }
-    }
-}
 ////////////////////////////////////////////////////////////////////////////
 template <typename Type, int Wymiar>
 void Sortowanie2(Data<Type, Wymiar> &D)
@@ -575,14 +534,15 @@ void Sortowanie2(Data<Type, Wymiar> &D)
             std::ofstream plik3("Shell_Sort.csv", std::ios_base::app);
             if (plik.good() == true)
             {
-                plik3 << "/t";
+                plik3 << "\t";
                 plik3.close();
             }
 
             D.Innit(j);
-            std::cout << Heap_Sort(D).Check_Sort() << std::endl;
-            std::cout << Merge_Sort(D).Check_Sort() << std::endl;
-            std::cout << Shell_Sort(D).Check_Sort() << std::endl;
+            if(!(Heap_Sort(D).Check_Sort())) std::cout<<"heap \n";
+            if(!Merge_Sort(D).Check_Sort()) std::cout<<"Marge \n";
+            if(!Shell_Sort(D).Check_Sort()) std::cout<<"Shell \n";
+             if(!Quick_Sort(D).Check_Sort()) std::cout<<"Quikc \n";
         }
         std::ofstream plik("Heap_Sort.csv", std::ios_base::app);
         if (plik.good() == true)
@@ -605,8 +565,10 @@ void Sortowanie2(Data<Type, Wymiar> &D)
         std::ofstream plik3("Shell_Sort.csv", std::ios_base::app);
         if (plik.good() == true)
         {
-            plik3 << "/n";
+            plik3 << "\n";
             plik3.close();
         }
+      
     }
+      std::cout<<"poszła 100   "<<Wymiar<<" \n";
 }

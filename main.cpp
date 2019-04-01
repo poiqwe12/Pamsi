@@ -26,7 +26,10 @@ int main()
     Data<int, rozmiar_3> *H = new Data<int, rozmiar_3>();
     Sortowanie2(*H);
     delete(H);
+  
+
     Data<int, rozmiar_4> *J = new Data<int, rozmiar_4>();
+    ///Quick_Sort(*J);
     Sortowanie2(*J);
     delete(J);
 
