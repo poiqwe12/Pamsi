@@ -13,24 +13,22 @@ int main()
     const int rozmiar_2 = 100000;
     const int rozmiar_3 = 500000;
     const int rozmiar_4 = 1000000;
-
-    Data<int, rozmiar_0> *D = new Data<int, rozmiar_0>();
-    Sortowanie2(*D);
-    delete(D);
-    Data<int, rozmiar_1> *E = new Data<int, rozmiar_1>();
-    Sortowanie2(*E);
-    delete(E);
-    Data<int, rozmiar_2> *G = new Data<int, rozmiar_2>();
-    Sortowanie2(*G);
-    delete(G);
+    
+    Data<int, rozmiar_0> *A = new Data<int, rozmiar_0>();
+    Sortowanie2(*A);
+    delete (A);
+    Data<int, rozmiar_1> *B = new Data<int, rozmiar_1>();
+    Sortowanie2(*B);
+    delete (B);
+    Data<int, rozmiar_2>*C = new Data<int, rozmiar_2>();
+    Sortowanie2(*C);
+    delete(C);
     Data<int, rozmiar_3> *H = new Data<int, rozmiar_3>();
     Sortowanie2(*H);
-    delete(H);
-  
-
+    delete (H);
     Data<int, rozmiar_4> *J = new Data<int, rozmiar_4>();
     Sortowanie2(*J);
-    delete(J);
+    delete (J);
 
     return 0;
 }
