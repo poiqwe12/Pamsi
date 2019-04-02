@@ -29,7 +29,6 @@ int main()
   
 
     Data<int, rozmiar_4> *J = new Data<int, rozmiar_4>();
-    ///Quick_Sort(*J);
     Sortowanie2(*J);
     delete(J);
 

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <time.h>
 #include <fstream>
+#include <math.h>
 ////////////////////////////////////////////////////////////////
 
 template <typename Type, int Wymiar>
@@ -208,7 +209,7 @@ Data<Type, Wymiar> Bumble_Sort(Data<Type, Wymiar> D, double &all_time)
     std::ofstream plik("Buble_Sort.csv", std::ios_base::app);
     if (plik.good() == true)
     {
-        std::cout << "Czas trwania: " << czas << std::endl;
+        //std::cout << "Czas trwania: " << czas << std::endl;
         plik << czas;
         plik.close();
     }
@@ -241,7 +242,7 @@ Data<Type, Wymiar> Insertion_Sort(Data<Type, Wymiar> D, double &all_time)
     std::ofstream plik("Insertion_Sort.csv", std::ios_base::app);
     if (plik.good() == true)
     {
-        std::cout << "Czas trwania: " << czas << std::endl;
+        //std::cout << "Czas trwania: " << czas << std::endl;
         plik << czas;
         plik.close();
     }
@@ -392,7 +393,7 @@ Data<Type, Wymiar> Quick_Sort(Data<Type, Wymiar> D, double &all_time)
     stop = clock();
     double czas = (double)(stop - start) / CLOCKS_PER_SEC;
     all_time = all_time + czas;
-    std::cout<<all_time<<" \n";
+    //std::cout << all_time << " \n";
     std::ofstream plik("Quick_Sort.csv", std::ios_base::app);
     if (plik.good() == true)
     {
@@ -438,8 +439,7 @@ void Quick_Sort2(Data<Type, Wymiar> &D, int index_left, int index_right)
     if (index_left < index_right)
     {
         int granica = Div_array(D, index_left, index_right);
-
-        Quick_Sort2(D, index_left, granica);
+        Quick_Sort2(D, index_left, granica-1);
         Quick_Sort2(D, granica + 1, index_right);
     }
 }
@@ -483,143 +483,179 @@ Data<Type, Wymiar> Shell_Sort(Data<Type, Wymiar> D, double &all_time)
     }
     return D;
 }
+/*   Sortowanie Introspektywne */
+template <typename Type, int Wymiar>
+Data<Type, Wymiar> Introspective_Sort(Data<Type, Wymiar> D, double &all_time)
+{
+    clock_t start, stop;
+    start = clock();
+    IntroSort(D, 0, Wymiar - 1, (int)floor(2 * log(Wymiar) / M_LN2));
+    stop = clock();
+    double czas = (double)(stop - start) / CLOCKS_PER_SEC;
+    all_time = all_time + czas;
+    std::ofstream plik("Introspective_Sort.csv", std::ios_base::app);
+    if (plik.good() == true)
+    {
+       // std::cout << "Czas trwania: " << czas << std::endl;
+        plik << czas;
+        plik.close();
+    }
+    return D;
+}
+
+template <typename Type, int Wymiar>
+void IntroSort(Data<Type, Wymiar> &D, int pocz, int rozmiar, int glebokosc_rek)
+{
+    double db;
+    int index_position;
+    if (glebokosc_rek <= 0)
+    {
+        for (int i = (Wymiar / 2) - 1; i >= 0; --i)
+        {
+            Shift_Down(D, i, Wymiar);
+        }
+        for (int i = 1; i < Wymiar; ++i)
+        {
+
+            Swap(D[0], D[Wymiar - i]);
+            Shift_Down(D, 0, Wymiar - i);
+        }
+    }
+    else
+    {
+        index_position = Div_array(D, pocz, rozmiar);
+        if (index_position > 9)
+        {
+            IntroSort(D, pocz, index_position, glebokosc_rek - 1);
+        }
+        if (rozmiar - 1 - index_position > 9)
+        {
+            IntroSort(D, index_position, rozmiar - index_position, glebokosc_rek - 1);
+        }
+    }
+}
 
 /*
-            Funkcje do sortowania 100 tablic o rozniej ilosci elementow
+    Funkcje przygotowane do sortowania 100 tablic o rozniej ilosci elementow
 */
 ////////////////////////////////////////////////////////////////////////////
 template <typename Type, int Wymiar>
 void Sortowanie2(Data<Type, Wymiar> &D)
 {
-    std::ofstream plik("Heap_Sort.csv", std::ios_base::app);
+    std::ofstream plik("Merge_Sort.csv", std::ios_base::app);
     if (plik.good() == true)
     {
         plik << "Sortowanie " << Wymiar << "elementow" << std::endl;
         plik.close();
     }
-    std::ofstream plik1("Merge_Sort.csv", std::ios_base::app);
+    std::ofstream plik1("Quick_Sort.csv", std::ios_base::app);
     if (plik.good() == true)
     {
         plik1 << "Sortowanie " << Wymiar << "elementow" << std::endl;
         plik1.close();
     }
-    std::ofstream plik2("Quick_Sort.csv", std::ios_base::app);
+    std::ofstream plik2("Introspective_Sort.csv", std::ios_base::app);
     if (plik.good() == true)
     {
         plik2 << "Sortowanie " << Wymiar << "elementow" << std::endl;
         plik2.close();
     }
-    std::ofstream plik3("Shell_Sort.csv", std::ios_base::app);
-    if (plik.good() == true)
-    {
-        plik3 << "Sortowanie " << Wymiar << "elementow" << std::endl;
-        plik3.close();
-    }
-
-    double czas_1[8];    ///tablica czasów dla heap sorta
-    double czas_2[8];    ///i tak dalej
+    double czas_1[8]; ///tablica czasów dla merge sorta
+    double czas_2[8]; ///i tak dalej
     double czas_3[8];
-    double czas_4[8];
-    for(int i =0;i<8;++i) ///zeruje czasy
+  
+    for (int i = 0; i < 8; ++i) ///zeruje czasy
     {
-        czas_1[i]=0;
-        czas_2[i]=0;
-        czas_3[i]=0;
-        czas_4[i]=0;
+        czas_1[i] = 0;
+        czas_2[i] = 0;
+        czas_3[i] = 0;
     }
 
-
-    for (int i = 0; i < 100; ++i)
+    for (int i = 0; i < 100; ++i) /// sto tablic
     {
-
-        for (int j = 0; j < 8; ++j)
+        for (int j = 0; j < 8; ++j) /// 8 roznych mozliwosci danych
         {
-            std::ofstream plik("Heap_Sort.csv", std::ios_base::app);
+            std::ofstream plik("Merge_Sort.csv", std::ios_base::app);
             if (plik.good() == true)
             {
                 plik << " \t";
                 plik.close();
             }
-            std::ofstream plik1("Merge_Sort.csv", std::ios_base::app);
+            std::ofstream plik1("Quick_Sort.csv", std::ios_base::app);
             if (plik1.good() == true)
             {
                 plik1 << " \t";
                 plik1.close();
             }
-            std::ofstream plik2("Quick_Sort.csv", std::ios_base::app);
+            std::ofstream plik2("Introspective_Sort.csv", std::ios_base::app);
             if (plik2.good() == true)
             {
                 plik2 << "\t";
                 plik2.close();
             }
-            std::ofstream plik3("Shell_Sort.csv", std::ios_base::app);
-            if (plik3.good() == true)
-            {
-                plik3 << "\t";
-                plik3.close();
-            }
+           
 
             D.Innit(j);
-            if (!(Heap_Sort(D,czas_1[j]).Check_Sort()))
-                std::cout << "heap \n";
-            if (!Merge_Sort(D,czas_2[j]).Check_Sort())
-                std::cout << "Marge \n";
-            if (!Shell_Sort(D,czas_3[j]).Check_Sort())
-                std::cout << "Shell \n";
-            if (!Quick_Sort(D,czas_4[j]).Check_Sort())
-                std::cout << "Quikc \n";
+            if (!(Merge_Sort(D, czas_1[j]).Check_Sort()))
+                std::cout << "marge \n";
+            if (!Quick_Sort(D, czas_2[j]).Check_Sort())
+                std::cout << "quick\n";
+            if (!Introspective_Sort(D, czas_3[j]).Check_Sort())
+                std::cout << "intro \n";
+            
         }
-        std::ofstream plik("Heap_Sort.csv", std::ios_base::app);
+        std::ofstream plik("Merge_Sort.csv", std::ios_base::app);
         if (plik.good() == true)
         {
-            plik << " \n";  
+            plik << " \n";
             plik.close();
         }
-        std::ofstream plik1("Merge_Sort.csv", std::ios_base::app);
+        std::ofstream plik1("Quick_Sort.csv", std::ios_base::app);
         if (plik1.good() == true)
         {
             plik1 << " \n";
             plik1.close();
         }
-        std::ofstream plik2("Quick_Sort.csv", std::ios_base::app);
+        std::ofstream plik2("Introspective_Sort.csv", std::ios_base::app);
         if (plik2.good() == true)
         {
             plik2 << "\n";
             plik2.close();
         }
-        std::ofstream plik3("Shell_Sort.csv", std::ios_base::app);
-        if (plik3.good() == true)
-        {
-            plik3 << "\n";
-            plik3.close();
-        }
+       
     }
-    for(int i =0;i<8;++i) ///zeruje czasy
+    for (int i = 0; i < 8; ++i) ///zeruje czasy
     {
-        czas_1[i]/=100;
-        czas_2[i]/=100;
-        czas_3[i]/=100;
-        czas_4[i]/=100;
+        czas_1[i] /= 100;
+        czas_2[i] /= 100;
+        czas_3[i] /= 100;
+       
     }
-    char *tab[8]={"wszystkie el losowe",
-    " 25% posortowane",
-    " 50% posortowane",
-    " 75% posortowane",
-    " 95% posortowane",
-    " 99% posortowane",
-    " 99,7% posortowane",
-    " posortowane odwrontnie"};
+    char *tab[8] = {(char *)"wszystkie el losowe",
+                    (char *)" 25% posortowane",
+                    (char *)" 50% posortowane",
+                    (char *)" 75% posortowane",
+                    (char *)" 95% posortowane",
+                    (char *)" 99% posortowane",
+                    (char *)" 99,7% posortowane",
+                    (char *)" posortowane odwrotnie"};
     std::cout << "poszła 100   " << Wymiar << " \n";
-     std::ofstream plik35("Sortowanie.csv", std::ios_base::app);
-        if (plik35.good() == true)
+    std::ofstream plik35("Sortowanie.csv", std::ios_base::app);
+    if (plik35.good() == true)
+    {
+        plik35 << "Sortowanie " << Wymiar << " elementów"
+               << "\n";
+        plik35 << "* \t"
+               << "Merge Sort"
+               << "\t"
+               << "Quick Sort"
+               << "\t"
+               << "Introspective Sort"
+               << "\n";
+        for (int i = 0; i < 8; ++i)
         {
-            plik35 << "Sortowanie "<<Wymiar<<" elementów"<<"\n";
-            plik35 <<"* \t"<<"Heap Sort"<<"\t"<<"Merge Sort"<<"\t"<<"Shell Sort"<<"\t"<<"Qucik Sort"<<"\n";
-            for(int i =0;i<8;++i)
-            {
-                plik35<<tab[i]<<"\t"<<czas_1[i]<<"\t"<<czas_2[i]<<"\t"<<czas_3[i]<<"\t"<<czas_4[i]<<"\n";
-            }
-            plik35.close();
+            plik35 << tab[i] << "\t" << czas_1[i] << "\t" << czas_2[i] << "\t" << czas_3[i] << "\n";
         }
-
+        plik35.close();
+    }
 }
